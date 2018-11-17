@@ -1,0 +1,222 @@
+<%- include("header") %>
+<div id="oneUser">
+    <div class="speartbox">
+        <el-breadcrumb separator="/">
+            <el-breadcrumb-item><a href="/posts">POSTS</a> </el-breadcrumb-item>
+            <el-breadcrumb-item><a href="/posts/user">
+                    后台管理
+                </a>
+            </el-breadcrumb-item>
+            <el-breadcrumb-item>{{user_Account}}用户管理</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div style="widows: 100%;background-color: white;padding-bottom: 20px">
+
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="TODO" name="todo">
+                <el-row :gutter="24">
+                    <el-col :sm="24" :md="12">
+                        <p class="manageBoxTitle">Active:</p>
+                        <el-table :data="todoactivelist" style="width: 100%">
+                            <el-table-column prop="todoeventid" label="ID" width="80">
+                            </el-table-column>
+                            <el-table-column prop="todoeventdate" label="时间">
+                            </el-table-column>
+                            <el-table-column prop="todoeventcontent" label="TODO内容">
+                            </el-table-column>
+                        </el-table>
+                    </el-col>
+                    <el-col :sm="24" :md="12">
+                        <p class="manageBoxTitle">Clear:</p>
+                        <el-table :data="todoclearlist" style="width: 100%">
+                            <el-table-column prop="todoeventid" label="ID" width="80">
+                            </el-table-column>
+                            <el-table-column prop="todoeventdate" label="时间">
+                            </el-table-column>
+                            <el-table-column prop="todoeventcontent" label="TODO内容">
+                            </el-table-column>
+                        </el-table>
+                    </el-col>
+
+                </el-row>
+            </el-tab-pane>
+            <el-tab-pane label="CONS" name="cons">
+
+                <el-row :gutter="24">
+                    <el-col :sm="24" :md="12">
+                        <p class="manageBoxTitle">Spend:</p>
+                        <el-table :data="consspendlist" style="width: 100%">
+                            <el-table-column prop="coneventid" label="ID" width="80">
+                            </el-table-column>
+                            <el-table-column prop="coneventdate" label="时间">
+                            </el-table-column>
+                            <el-table-column prop="coneventcontent" label="CONS内容">
+                            </el-table-column>
+                            <el-table-column prop="coneventmoney" label="金额">
+                            </el-table-column>
+                        </el-table>
+                    </el-col>
+                    <el-col :sm="24" :md="12">
+                        <p class="manageBoxTitle">Income:</p>
+                        <el-table :data="consincomelist" style="width: 100%">
+                            <el-table-column prop="coneventid" label="ID" width="80">
+                            </el-table-column>
+                            <el-table-column prop="coneventdate" label="时间">
+                            </el-table-column>
+                            <el-table-column prop="coneventcontent" label="CONS内容">
+                            </el-table-column>
+                            <el-table-column prop="coneventmoney" label="金额">
+                            </el-table-column>
+                        </el-table>
+                    </el-col>
+
+                </el-row>
+            </el-tab-pane>
+            <el-tab-pane label="MONTH" name="month">
+
+                <el-row :gutter="24">
+                    <el-col :sm="24" :md="12">
+                        <el-table :data="monthlist" style="width: 100%" :row-class-name="tableRowClassName">
+                            <el-table-column prop="dateId" label="时间ID" width="80">
+                            </el-table-column>
+                            <el-table-column prop="datemonth" label="月份">
+                            </el-table-column>
+                            <el-table-column prop="datemoney" label="情况">
+                            </el-table-column>
+                            <el-table-column prop="moneyspend" label="支出">
+                            </el-table-column>
+                            <el-table-column prop="moneyincome" label="收入">
+                            </el-table-column>
+                        </el-table>
+
+                    </el-col>
+                    <el-col :sm="24" :md="12">
+                        <div style="position: relative;">
+                            <div class="loadingEchartBox" >
+                                <span class="el-icon-loading"></span>
+                                <h3>努力加载当中!!!</h3>
+                            </div>
+                            <el-row>
+                                <el-col :sm="12" v-for="(tess,index) of monthlist" :key="index">
+                                    <div class="mianboxMonthlist" :id=`main${tess.dateId}`>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                    </el-col>
+                </el-row>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+
+</div>
+</div>
+<script src="/manageEchart.js"></script>
+<script>
+    var oneUser = new Vue({
+        el: "#oneUser",
+        data() {
+            return {
+                user_account: "用户名",
+                activeName: "todo",
+                todoactivelist: [],
+                todoclearlist: [],
+                consspendlist: [],
+                consincomelist: [],
+                monthlist: []
+            }
+        },
+        computed: {
+            user_Account: function () {
+                this.user_account = localStorage.getItem("account");
+                return this.user_account;
+            }
+        },
+        methods: {
+            tableRowClassName({
+                row,
+                rowIndex
+            }) {
+                let money = row.datemoney;
+                if (money.substring(0, 1) == '-') {
+                    return 'warning-row';
+                }
+                return '';
+            },
+            handleClick(tab, event) {
+                let _vm = this;
+                if (tab.label == 'TODO') {
+                    $.ajax({
+                        url: "/posts/user/oneusergettodo",
+                        type: "POST",
+                        data: {
+                            userid: localStorage.getItem("id")
+                        },
+                        success: function (mes) {
+                            _vm.todoactivelist = mes.active;
+                            _vm.todoclearlist = mes.clear;
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    })
+                }
+                if (tab.label == 'CONS') {
+                    $.ajax({
+                        url: "/posts/user/oneusergetcons",
+                        type: "POST",
+                        data: {
+                            userid: localStorage.getItem("id")
+                        },
+                        success: function (mes) {
+                            _vm.consspendlist = mes.spend;
+                            _vm.consincomelist = mes.income;
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    })
+                }
+                if (tab.label == 'MONTH') {
+                    $('.loadingEchartBox').css('display',"block");
+                    $.ajax({
+                        url: "/posts/user/oneusergetmonth",
+                        type: "POST",
+                        data: {
+                            userid: localStorage.getItem("id")
+                        },
+                        success: function (mes) {
+                            _vm.monthlist = mes.res;
+                            setTimeout(function () {
+                                $('.loadingEchartBox').css('display',"none");
+                                $('.loadingEchartBox').css('transition',"0.5s");
+                                echartBoxs(mes.res)
+                            }, 500)
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    })
+                }
+            }
+        },
+        created: function () {
+            let _vm = this;
+            $.ajax({
+                url: "/posts/user/oneusergettodo",
+                type: "POST",
+                data: {
+                    userid: localStorage.getItem("id")
+                },
+                success: function (mes) {
+                    _vm.todoactivelist = mes.active;
+                    _vm.todoclearlist = mes.clear;
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            })
+        }
+
+    });
+</script>
+<% include footer %>

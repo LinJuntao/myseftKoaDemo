@@ -1,0 +1,764 @@
+body,
+header,
+ul,
+li,
+p,
+div,
+html,
+span,
+h3,
+a,
+blockquote {
+    margin: 0;
+    padding: 0;
+    color: black;
+}
+
+body,
+html {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(241, 239, 239);
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+header {
+    width: 100%;
+    height: 50px;
+    background-color: #496080;
+}
+
+.h1Title {
+    height: 50px;
+    line-height: 50px;
+    color: rgb(224, 223, 223);
+    font-size: 25px;
+    float: left;
+    margin-left: 10px;
+}
+
+.h1Title:hover {
+    color: white;
+}
+
+.headerRight {
+    float: right;
+    height: 50px;
+    margin-right: 10px;
+    position: relative;
+}
+.headerRight>li{
+    float: left;
+}
+.headerRight>li>a {
+    height: 50px;
+    color: rgb(224, 223, 223);
+    font-size: 15px;
+    /* float: left; */
+    display: block;
+    padding-right: 5px;
+}
+
+.headerRight>li>a>i {
+    height: 50px;
+    line-height: 50px;
+    float: left;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.headerRight>li>a:hover {
+    color: white;
+}
+
+.headerRight>li>a>img {
+    width: 40px;
+    height: 40px;
+    margin-top: 5px;
+    border-radius: 50%;
+}
+.headerRight .listtwobox{
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    display: none
+}
+.headerRight .listtwobox>li{
+    background-color: #496080;
+  
+}
+.headerRight .listtwobox>li:nth-child(2){
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.headerRight .listtwobox>li>a{
+    display: block;
+    height: 40px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 40px;
+    color: rgb(224, 223, 223);
+
+}
+.headerRight:hover .listtwobox{
+    display: block
+}
+.headerRight .listtwobox>li:hover{
+    background-color: #788eac;
+    transition: 0.3s
+}
+.headerRight .listtwobox>li:hover>a{
+    color: white;
+    transition: 0.3s
+}
+
+.alterbox {
+    width: 200px;
+    height: 40px;
+    background-color: #527db9;
+    text-align: center;
+    line-height: 40px;
+    position: absolute;
+    z-index: 99;
+    top: -50px;
+    left: 50%;
+    font-size: 18px;
+    transform: translateX(-50%);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    transition: 0.8s;
+}
+
+.signin,
+.signup {
+    width: 60%;
+    position: relative;
+    margin: 50px auto;
+}
+
+.sigtitle,
+.siguptitle {
+    font-size: 22px;
+}
+
+.siguptitle>p {
+    padding-top: 70px;
+}
+
+.sigInput {
+    width: 100%;
+}
+
+.sigInput>div {
+    font-size: 18px;
+    padding-top: 5px;
+}
+
+.sigInput>div>input {
+    width: 98%;
+    height: 25px;
+    padding: 10px 5px;
+    font-size: 18px;
+    margin-top: 10px;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    -webkit-appearance: none;
+}
+
+.btnlist {
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.formbtn {
+    font-size: 18px;
+    padding: 10px 10px;
+    background-color: #5fb878;
+    color: white;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    margin-right: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.formImg {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: none;
+    margin-top: 10px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.containerbox {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.containerbox .listbox {
+    width: 80%;
+    margin: 0 auto
+}
+
+.containerbox .listbox .elcolbox {
+    display: block;
+    width: 100%;
+    height: 250px;
+    background-color: white;
+    margin-top: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.containerbox .listbox .elcolbox .lboxtitle {
+    width: 100%;
+}
+
+.containerbox .listbox .elcolbox .lboxtitle>i {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+    font-size: 40px;
+    line-height: 50px;
+}
+
+.containerbox .listbox .elcolbox .lboxtitle>div {
+    font-size: 20px;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.containerbox .listbox .elcolbox .lboxcon {
+    width: 100%;
+}
+
+.containerbox .listbox .elcolbox .lboxcon>span {
+    display: block;
+    width: 98%;
+    font-size: 16px;
+    padding-top: 10px;
+    /* padding-bottom: 10px; */
+    padding-left: 2%;
+    text-align: center
+        /* padding: 5px 1% */
+}
+
+.containerbox .listbox .elcolbox:hover {
+    background-color: #6aa0b6bb;
+    transition: 0.5s
+}
+
+.manageusers {
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: white;
+}
+
+
+/*********TODO部分的css */
+
+.todobox {
+    width: 100%;
+    padding-bottom: 20px;
+    /* background-color: white; */
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.speartbox {
+    padding: 10px 10px;
+    background-color: #fff;
+}
+
+.todobox .todosomething {
+    width: 100%;
+    margin: 10px auto;
+    background-color: #fff;
+}
+
+.containHeader {
+    width: 100%;
+}
+.containHeader .allbox{
+   display: block;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 20px;
+    color: gainsboro;
+}
+.containHeader .inputHeaderBox{
+    width: 100%;
+    border: none;
+    height: 47px;
+    font-size: 20px;
+    color: gray;
+   
+}
+.containHeader .btnHeaderbox{
+    width: 100%;
+    height: 50px;
+    border-left: 1px solid gainsboro;
+    float: left;
+    font-size: 18px;
+    line-height: 50px;
+    text-align: center;
+    color: gray;
+}
+.containLister {
+    width: 100%;
+}
+.listContainBOX{
+    border-bottom: 1px solid gainsboro
+}
+
+.checkboxChange{
+    display: block;
+    width: 100%;
+    height: 50px;
+   }
+.checkboxChange>input[type="checkbox"]{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    -webkit-appearance: none;
+    border: 1px solid #c9c9c9;
+    border-radius: 2px;
+    outline: none;
+    border-radius: 50%;   
+    margin-top: 10px;
+    margin-left: 5px;
+
+}
+.containboxRigth{
+    width: 100%;
+    /* height: 50px; */
+    margin-top: 10px;
+    position: relative;
+}
+.containboxRigth>i{
+    font-size: 14px;
+    color: gray;
+    
+}
+.containboxRigth>button{
+    border: 1px solid gainsboro;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 15px;
+    line-height: 30px;
+    color: gainsboro;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    display: none;
+}
+.containboxPP{
+    width: 100%;
+}
+.containboxPP>p{
+    font-size: 19px;
+    word-wrap: break-word;
+    margin-top: 5px;
+    padding-right: 5px
+}
+.listContainBOX:hover {
+    background-color: #eeeded
+} 
+.listContainBOX:hover .containboxRigth>button{
+    display: block;
+}
+.listContainBOX .containboxRigth>button:hover{
+    background-color: #2b68ad;
+    color: white;
+    transition: 0.3s;
+}
+.chBOX{
+    /* width: 100%; */
+    height: 50px;
+    /* margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px; */
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    line-height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 5px
+
+}
+#chbox2{
+    border: 1px solid gainsboro;
+}
+#clearchbox{
+    background-color: #4b6c9993
+}
+/* .otherlistConBox {
+    width: 100%;
+    border: 1px solid gainsboro;
+    border-top: none;
+    position: relative;
+}
+
+.otherlistConBox .otherp {
+    width: 525px;
+    display: inline-block;
+    font-size: 19px;
+    padding-right: 190px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 50px;
+    word-wrap: break-word;
+}
+
+.containLister .otherlistConBox>i {
+    font-size: 15px;
+    display: block;
+    width: 190px;
+    height: 40px;
+    line-height: 40px;
+    color: gray;
+    position: absolute;
+    bottom: 0;
+    right: 0px;
+} */
+
+/* .containLister .listConBox:hover {
+    background-color: #eeeded
+} */
+/* 
+div.otherlistConBox:hover {
+    background-color: #eeeded;
+    transition: 0.3s
+} */
+
+.monthbox {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.todomonthclss {
+    margin-bottom: 5px;
+    padding: 0 10px
+}
+
+.todomonthclss>p {
+    padding: 5px 10px;
+    font-size: 15px;
+}
+
+.monthTrue {
+    border: 1px solid #019e01;
+    color: black
+}
+
+.monthFalse {
+    border: 1px solid #bdbdbd;
+    color: #7e7e7e
+}
+
+.todomonthclss>p:hover {
+    background-color: #ebebeb
+}
+
+
+/****consumption 月账单部分***/
+
+.conbox {
+    width: 100%;
+    background-color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding-bottom: 30px
+}
+
+.conscardtitle {
+    width: 100%;
+    height: 35px;
+    position: relative;
+}
+
+.conscardtitle>div:nth-child(1) {
+    width: 60px;
+    float: left
+}
+
+.conscardtitle>div:nth-child(2) {
+    width: 80%;
+    float: right
+}
+
+.siftbox {
+    display: block;
+    height: 35px;
+    color: #0099ff;
+    font-size: 16px;
+    padding-left: 25px
+}
+
+.siftbox>img {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.siftbox .siftdisbox {
+    position: absolute;
+    width: 100%;
+    top: 30px;
+    left: 0;
+    background-color: white;
+    z-index: 0;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    padding: 10px 0px;
+    opacity: 0;
+    display: none
+}
+
+.siftbox .siftdisbox>li {
+    display: inline-block;
+    padding-right: 5px;
+    padding-left: 35px;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.siftbox .siftdisbox>li>img {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 0;
+    left: 10px;
+}
+
+.siftbox .siftdisbox>li>div {
+    color: #0b5fa3;
+    cursor: pointer
+}
+
+.siftbox .siftdisbox>li:hover>div {
+    color: #1793f8;
+    transition: 0.5s
+}
+
+.siftbox:hover .siftdisbox {
+    opacity: 1;
+    display: block;
+    transition: 0.5s;
+    z-index: 99;
+}
+
+.siftbox .siftdisbox>div {
+    width: 100%;
+    padding-left: 10px;
+    /* padding-bottom: 10px */
+}
+
+.siftbox .siftdisbox>div>span {
+    display: inline-block;
+    width: 80px;
+    padding-right: 10px
+}
+
+.siftbox .siftdisbox>div>span:nth-child(1) {
+    width: 50px;
+    padding: 0
+}
+
+.consnexttitle {
+    width: 100%;
+    height: 50px;
+    background-color: #e7e7e7;
+    border-radius: 5px;
+    padding: 5px 0px;
+    position: relative;
+    line-height: 25px;
+}
+
+.consnexttitle>span {
+    padding-left: 10px;
+    font-size: 13px;
+    margin-top: 10px
+}
+
+.consnexttitle>span:nth-child(1) {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.consnexttitle>span:nth-child(4) {
+    color: #be1111
+}
+
+.consnexttitle>span:nth-child(5) {
+    color: #1d7a1d
+}
+
+.consnexttitle>div {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    padding-right: 10px;
+}
+
+.conscardcontain {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.el-form-item__label {
+    height: 35px;
+    padding-bottom: 0
+}
+
+.consboxlists {
+    width: 100%;
+    height: 50px;
+    padding: 5px 0px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid gainsboro
+}
+
+.consboxlists>img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid gainsboro;
+    float: left
+}
+
+.consboxlists>p {
+    display: inline-block;
+    height: 50px;
+}
+
+.consboxlists>p>span {
+    font-size: 13px;
+    display: block;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.consboxlists>span {
+    display: block;
+    padding: 5px 5px;
+    width: 50px;
+    height: 40px;
+    float: right;
+    text-align: center;
+    font-size: 16px;
+    line-height: 40px;
+    border-left: 1px solid gainsboro
+}
+
+.consboxlists:hover {
+    background-color: gainsboro
+}
+
+.consboxlists:hover>span {
+    color: white
+}
+
+.tranBox {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: rgba(83, 83, 83, 0.5);
+    top: 0;
+    left: 0;
+    z-index: 99;
+}
+
+.tranBox .tranBoxNext {
+    width: 830px;
+    height: 340px;
+    background-color: white;
+    border-radius: 5px;
+    padding-top: 10px;
+    position: relative;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+
+.tranBox .tranBoxNext .mianboxs {
+    padding-top: 10px;
+    display: inline-block;
+    padding-left: 5px
+}
+
+.oneUserBox{
+    width: 100%;
+    height: 60px;
+}
+
+.mianboxMonthlist{
+    width: 100%;
+    height: 300px;
+}
+.loadingEchartBox{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    background-color: rgba(73, 96, 128, 0.5);
+    border-radius: 5px;
+    display: none;
+    
+}
+.loadingEchartBox>span{
+    display: block;
+    width: 100%;
+    color: white;
+    font-size: 40px;
+    text-align: center;
+    margin-top: 30px
+}
+.loadingEchartBox>h3{
+    font-size: 20px;
+    color: white;
+    text-align: center
+}
+.el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+  .manageBoxTitle{
+      font-size: 20px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 10px
+  }

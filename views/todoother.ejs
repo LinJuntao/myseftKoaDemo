@@ -1,0 +1,259 @@
+<%- include("header") %>
+<div id="todoother">
+    <div class="todobox">
+        <div class="speartbox">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>
+                    <a href="/posts">
+                        POSTS
+                    </a>
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>
+                    <a href="/posts/todo">
+                        TODO
+                    </a>
+                </el-breadcrumb-item>
+                <el-breadcrumb-item> <span id="titlespan">All</span> </el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <el-row :gutter="24">
+                <el-col :xs="0" :sm="3" :md="4">
+                    <div style="width:40px;height:40px"></div>
+                </el-col>
+                <el-col :xs="24" :sm="18" :md="16">
+                    <div class="todosomething">
+                        <el-row>
+                            <el-col :span="24">
+                                <div class="containHeader">
+                                    <el-row style="border: 1px solid gainsboro;">
+                                        <el-col :span="2"><span class="allbox"></span></el-col>
+                                        <el-col :span="20">
+                                            <input class="inputHeaderBox" type="text" placeholder="What needs to be find?"
+                                                @keyup.enter="todofindbtn" v-model="todofind"></el-col>
+                                        <el-col :span="2">
+                                            <div class="el-icon-search btnHeaderbox" v-on:click="todofindbtn"></div>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row style="border: 1px solid gainsboro; border-top:none ">
+                                        <el-col :span="2">
+                                            <span class="allbox"></span>
+                                        </el-col>
+                                        <el-col :span="20">
+                                            <input class="inputHeaderBox" type="text" placeholder="What needs to be done?"
+                                                @keyup.enter="todobtn" v-model="todoStr">
+                                        </el-col>
+                                        <el-col :span="2">
+                                            <div class="el-icon-edit btnHeaderbox" v-on:click="todobtn"></div>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </el-col>
+                            <el-col :span="24" style="box-shadow: 1px 1px 3px #888888;">
+                                <el-row class="listContainBOX" v-for="(teams,index) in todolists" :key="index">
+                                    <el-col :span="2">
+                                        <span class="checkboxChange">
+                                          
+                                        </span>
+                                    </el-col>
+                                    <el-col :span="16">
+                                        <div class="containboxPP">
+                                            <p class="otherp" :data-stuid="teams.todoeventstatue">
+                                                {{teams.todoeventcontent}} </p>
+                                        </div>
+                                    </el-col>
+                                    <el-col :span="6">
+                                        <div class="containboxRigth"><i>时间:<br> {{teams.todoeventdate }}</i>
+                                        </div>
+                                    </el-col>
+                                </el-row>
+                               <el-row :span="24" >
+                                    <el-col :xs="12" :sm="8" :md="6" :lg="4" >
+                                        <div class="chBOX" id="chbox1" v-on:click="todofindalldata">All</div>
+                                    </el-col>
+                                    <el-col :xs="12" :sm="8" :md="6" :lg="4" >
+                                            <div class="chBOX" id="chbox2" v-on:click="todofindactdata">Active</div>
+                                        </el-col>
+                                    <el-col :xs="12" :sm="8" :md="6" :lg="4" >
+                                            <div class="chBOX" id="chbox3" v-on:click="todofinddeldata">Completed</div>
+                                    </el-col>
+                                    <el-col :xs="12" :sm="8" :md="6" :lg="4" >
+                                            <div class="chBOX" v-on:click="todoMonth">Month</div>
+                                    </el-col>
+                               </el-row>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </el-col>
+            </el-row>
+
+
+    </div>
+
+
+</div>
+<script>
+    document.getElementById("titlespan").innerText = localStorage.getItem("keyTodo")
+    var todoother = new Vue({
+        el: '#todoother',
+        data() {
+            return {
+                todolists: [],
+                todoStr: "",
+                todofind: "",
+            }
+        },
+        computed: {
+            endtodoStr: function () {
+                return this.todoStr.trim()
+            }
+        },
+        methods: {
+            todobtn() {
+                let _vm = this;
+                if ($("input[type='checkbox']").is(':checked')) {
+                    showAlterbox("已选中TODO事件")
+                } else if (_vm.endtodoStr == '') {
+                    showAlterbox("请输入内容")
+                } else {
+                    $.ajax({
+                        url: '/posts/todo/addtodo',
+                        data: {
+                            todoeventcontent: _vm.endtodoStr
+                        },
+                        async: false,
+                        type: "POST",
+                        success: function (mes) {
+                            if (mes.code == 200) {
+                                window.location.href = "/posts/todo"
+                            }
+                        },
+                        error: function () {
+                            alert("出错")
+                        }
+                    })
+                }
+            },
+            todofindbtn() {
+                let _vm = this;
+                $.ajax({
+                    url: '/posts/todo/findtoda',
+                    data: {
+                        todoclickname: _vm.todofind
+                    },
+                    async: false,
+                    type: "POST",
+                    success: function (mes) {
+                        if (mes.code == 200) {
+                            _vm.todolists = mes.res
+                            showAlterbox("搜索成功")
+                            _vm.ifcheckbo = false
+                            $('#chbox1').css("border",
+                                "1px solid gainsboro")
+                            $('#chbox2').css("border", "none")
+                            $('#chbox3').css("border", "none")
+                        }
+                    },
+                    error: function () {
+                        alert("出错")
+                    }
+                })
+            },
+            todofindalldata() {
+                let _vm = this;
+                $.ajax({
+                    url: '/posts/todo/getalldata',
+                    async: false,
+                    type: "GET",
+                    success: function (mes) {
+                        if (mes.code == 200) {
+                            _vm.todolists = mes.res;
+                            showAlterbox("返回所有数据")
+                            $('#chbox1').css("border", "1px solid gainsboro")
+                            $('#chbox2').css("border", "none")
+                            $('#chbox3').css("border", "none")
+                        }
+                    },
+                    error: function () {
+                        alert("出错")
+                    }
+                })
+            },
+            todofindactdata() {
+                window.location.href = "/posts/todo"
+            },
+            todofinddeldata() {
+                let _vm = this;
+                $.ajax({
+                    url: '/posts/todo/getdeldata',
+                    async: false,
+                    type: "GET",
+                    success: function (mes) {
+                        if (mes.code == 200) {
+                            _vm.todolists = mes.res
+                            showAlterbox("返回已过期的数据")
+                            $('#chbox1').css("border", "none")
+                            $('#chbox2').css("border", "none")
+                            $('#chbox3').css("border", "1px solid gainsboro")
+
+                        }
+                    },
+                    error: function () {
+                        alert("出错")
+                    }
+                })
+            },
+            todoMonth() {
+                window.location.href = "/posts/todo/month"
+            }
+        },
+        created: function () {
+            if (localStorage.getItem('keyTodo') == "all") {
+                let _vm = this;
+                $.ajax({
+                    url: '/posts/todo/getalldata',
+                    async: false,
+                    type: "GET",
+                    success: function (mes) {
+                        if (mes.code == 200) {
+                            _vm.todolists = mes.res;
+                            showAlterbox("返回所有数据")
+                            $('#chbox1').css("border",
+                                "1px solid gainsboro")
+                            $('#chbox2').css("border", "none")
+                            $('#chbox3').css("border", "none")
+
+                        }
+                    },
+                    error: function () {
+                        alert("出错")
+                    }
+                })
+            }
+
+            if (localStorage.getItem('keyTodo') == "del") {
+                let _vm = this;
+                $.ajax({
+                    url: '/posts/todo/getdeldata',
+                    async: false,
+                    type: "GET",
+                    success: function (mes) {
+                        if (mes.code == 200) {
+                            _vm.todolists = mes.res
+                            showAlterbox("返回已过期的数据")
+                            _vm.ifcheckbo = false
+                            $('#chbox1').css("border", "none")
+                            $('#chbox2').css("border", "none")
+                            $('#chbox3').css("border",
+                                "1px solid gainsboro")
+                        }
+                    },
+                    error: function () {
+                        alert("出错")
+                    }
+                })
+            }
+
+        }
+    })
+</script>
+<% include footer %>

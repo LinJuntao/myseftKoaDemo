@@ -1,0 +1,271 @@
+<%- include("header") %>
+<div id="managelist" class="manageusers">
+    <el-breadcrumb separator="/" style="padding-top:20px;">
+        <el-breadcrumb-item><a href="/posts">POSTS</a> </el-breadcrumb-item>
+        <el-breadcrumb-item>后台管理</el-breadcrumb-item>
+    </el-breadcrumb>
+
+    <el-tabs v-model="activeName" >
+        <el-tab-pane label="用户管理" name="first">
+            <div style="width:100%;height:50px">
+                <div style="float:right">
+                    <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="findte" @keyup.enter.native="handelfind">
+                    </el-input>
+                </div>
+            </div>
+            <el-table :data="manageuserlist" style="width: 100%" @row-click="changerow">
+                <el-table-column prop="id" label="ID" width="70">
+                </el-table-column>
+                <el-table-column prop="account" label="账号" width="130">
+                </el-table-column>
+                <el-table-column prop="username" label="昵称">
+                </el-table-column>
+                <el-table-column prop="moment" label="注册时间" width="200">
+                </el-table-column>
+                <el-table-column prop="password" label="加密后的密码">
+                </el-table-column>
+                <el-table-column prop="avator" label="对应图片的文件名">
+                </el-table-column>
+                <el-table-column prop="todosqlfm" label="对应的数据库一">
+                </el-table-column>
+                <el-table-column prop="consqlfm" label="对应的数据库二">
+                </el-table-column>
+                <el-table-column prop="monthsqlfm" label="对应的数据库三">
+                </el-table-column>
+                <el-table-column  prop="tag" label="标签" width="100">
+                    <template slot-scope="scope">
+                        <el-tag v-if=" scope.row.todomanage ==1" type="success" disable-transitions>管理员</el-tag>
+                        <el-tag v-if=" scope.row.todomanage ==0" type="primary" disable-transitions>用户</el-tag>
+                    </template>
+                </el-table-column>
+
+                <el-table-column class-name="caozuo" label="操作" width="250">
+                    <template slot-scope="scope">
+                        <el-button size="mini" @click="handleEdit(scope.row)">修改</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+                        <el-button size="mini" type="success" @click="handleSetManger( scope.row)">升级</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div style="padding-top:20px;height: 40px;width:100%">
+                <div style="float:right">
+                    <el-pagination @current-change="handleCurrentChange" :page-size="10" background layout="total, prev, pager, next"
+                        :total="totalList">
+                    </el-pagination>
+                </div>
+            </div>
+        </el-tab-pane>
+ 
+    </el-tabs>
+</div>
+<script>
+    var managelist = new Vue({
+        el: "#managelist",
+        data() {
+            return {
+                manageuserlist: [],
+                activeName: "first",
+                totals: null,
+                form: {
+                    username: null,
+                    account: null,
+                    password: null
+                },
+                findte: ""
+            }
+        },
+        computed: {
+            totalList: function () {
+                return parseInt(this.totals);
+            }
+        },
+        methods: {
+            changerow(row,event,column){
+                if(column.className != 'caozuo'){
+                    localStorage.setItem("account",row.account);
+                    localStorage.setItem("id",row.id);
+                    window.location.href="/posts/user/oneuser"
+                }
+            }
+            ,
+            handleEdit(row) {
+                this.$prompt('请输入要修改的内容', '昵称', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                }).then(({
+                    value
+                }) => {
+                    this.form.username = value;
+                    this.$prompt('请输入要修改的内容', '账户', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                    }).then(({
+                        value
+                    }) => {
+                        this.form.account = value;
+                        this.$prompt('请输入要修改的内容', '密码', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                        }).then(({
+                            value
+                        }) => {
+                            this.form.password = value;
+                            this.$message({
+                                type: 'success',
+                                message: '修改成功'
+                            });
+                            let _vm = this;
+                            console.log(this.form)
+                            $.ajax({
+                                url: '/posts/user/set',
+                                data: {
+                                    userid: row.id,
+                                    avator: row.avator,
+                                    username: _vm.form.username,
+                                    password: _vm.form.password,
+                                    repeatpass: _vm.form.password,
+                                    account: _vm.form.account
+                                },
+                                type: "POST",
+                                success: function (mes) {
+
+                                    if (mes.code == 200) {
+                                        _vm.$message({
+                                            showClose: true,
+                                            message: '修改成功',
+                                            type: 'success'
+                                        });
+                                        setTimeout(function () {
+                                            window.location.href =
+                                                '/signin';
+                                        }, 1000)
+                                    }
+
+                                },
+                                error: function () {
+                                    alert("出错")
+                                }
+                            })
+                        })
+                    });
+
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+                console.log(row);
+            },
+            handleDelete(row) {
+                let _vm = this;
+                if (confirm("你确定要删除该用户吗？")) {
+                    $.ajax({
+                        url: '/posts/user/del',
+                        data: {
+                            userid: row.id,
+                            tokenX: "4585ce0cf69ea126aec9227b2fba3361"
+                        },
+                        type: "POST",
+                        success: function (mes) {
+                            if (mes.code == 200) {
+                                _vm.$message({
+                                    showClose: true,
+                                    message: '已成为删除改用户',
+                                    type: 'success'
+                                });
+                                setTimeout(function () {
+                                    location.reload()
+                                }, 1000)
+                            }
+
+                        },
+                        error: function () {
+                            alert("出错")
+                        }
+                    })
+                }
+            },
+            handleSetManger(row) {
+                let _vm = this;
+                if (confirm("你确定把他/她设置成管理员吗？")) {
+                    $.ajax({
+                        url: '/posts/user/setuserMM',
+                        data: {
+                            userid: row.id,
+                            tokenX: "4585ce0cf69ea126aec9227b2fba3361"
+                        },
+                        type: "POST",
+                        success: function (mes) {
+                            if (mes.code == 200) {
+                                _vm.$message({
+                                    showClose: true,
+                                    message: '已成为管理员',
+                                    type: 'success'
+                                });
+                                setTimeout(function () {
+                                    location.reload()
+                                }, 1000)
+                            }
+
+                        },
+                        error: function () {
+                            alert("出错")
+                        }
+                    })
+                }
+            },
+            handleCurrentChange(val) {
+                let _vm = this;
+                $.ajax({
+                    url: '/posts/user/page',
+                    data: {
+                        page: `${val}`
+                    },
+                    type: "POST",
+                    success: function (mes) {
+                        _vm.manageuserlist = mes;
+                    },
+                    error: function () {
+                        alert("出错")
+                    }
+                })
+            },
+            handelfind() {
+                let _vm = this;
+                $.ajax({
+                    url: '/posts/user/find',
+                    data: {
+                        findname: _vm.findte
+                    },
+                    type: "POST",
+                    success: function (mes) {
+                        _vm.manageuserlist = mes;
+                    },
+                    error: function () {
+                        alert("出错")
+                    }
+                })
+            }
+        },
+        created: function () {
+            let _vm = this;
+            $.ajax({
+                url: '/posts/user/page',
+                data: {
+                    page: 1
+                },
+                type: "POST",
+                success: function (mes) {
+                    _vm.manageuserlist = mes;
+                },
+                error: function () {
+                    alert("出错")
+                }
+            })
+            this.totals = `<%= pagetop %>`
+        }
+
+    })
+</script>
+<% include footer %>

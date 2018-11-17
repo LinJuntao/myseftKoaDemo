@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TODO</title>
+    <link rel="icon" href="/log.jpg">
+    <script src="/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="/ideabox.css">
+    <!-- element` -->
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="/vue.min.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <script>
+        function showAlterbox(val) {
+            $('.alterbox').text(val)
+            $('.alterbox').css("top", "0")
+            setTimeout(function () {
+                $('.alterbox').css("top", "-50px")
+            }, 2000)
+    }
+</script>
+</head>
+
+<body>
+    <div class="alterbox">这是用来提示的box</div>
+    <div id="app" class="signup">
+
+        <el-row>
+            <el-col style="width:100%">
+                <el-card shadow="hover">
+                    <div class="siguptitle">
+                        <p>
+                            修改个人资料 |&nbsp; SIGNSET
+                        </p>
+                    </div>
+                    <hr>
+                    <form class="sigInput" method="post">
+                        <div>
+                            <label>昵称：</label>
+                            <input name="username" type="text" placeholder="请输入用户名">
+                        </div>
+                        <div>
+                            <label>账号：</label>
+                            <input type="text" name="account" placeholder="请输入用户名">
+                        </div>
+                        <div>
+                            <label>密码：</label>
+                            <input placeholder="请输入密码" type="password" name="password">
+                        </div>
+                        <div>
+                            <label>重复密码：</label>
+                            <input placeholder="请再次输入密码" type="password" name="repeatpass">
+                        </div>
+                        <div>
+                            <label>上传头像：</label>
+                            <input type="file" name="avator" id="avator" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
+                            <input type="hidden" id="avatorVal">
+                            <img class="preview formImg" alt="预览头像">
+                        </div>
+
+                    </form>
+                    <div class="btnlist">
+                        <div class="submit formbtn"> 提交</div>
+                        <a href="/signin" class="formbtn">
+                            <i class="el-icon-back"></i> 返回</a>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+    </div>
+    <script>
+        $(window).keyup(function (e) {
+            if (e.keyCode == 13) {
+                $('.submit').click()
+            }
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data() {
+                return {}
+            }
+        })
+        $('#avator').change(function () {
+            if (this.files.length != 0) {
+                var file = this.files[0],
+                    reader = new FileReader();
+                if (!reader) {
+                    this.value = '';
+                    return;
+                };
+                if (!/image/g.test(file.type)) {
+                    showAlterbox("请上传图片文件!")
+                    $('#avatorVal').val('')
+                    $('.formImg').attr('src', '')
+                    $('.formImg').fadeOut()
+                    return
+                }
+                reader.onload = function (e) {
+                    this.value = '';
+                    $('.formImg').attr('src', e.target.result)
+                    $('.formImg').fadeIn()
+                    var image = new Image();
+                    image.onload = function () {
+                        var canvas = document.createElement('canvas');
+                        var ctx = canvas.getContext("2d");
+                        canvas.width = 100;
+                        canvas.height = 100;
+                        ctx.clearRect(0, 0, 100, 100);
+                        ctx.drawImage(image, 0, 0, 100, 100);
+                        var blob = canvas.toDataURL("image/png");
+                        $('#avatorVal').val(blob)
+                    }
+                    image.src = e.target.result
+                };
+                reader.readAsDataURL(file);
+            };
+        })
+        $('.submit').click(function () {
+            var reg = new RegExp("[\\u4E00-\\u9FFF]+", "g");
+            if ($('input[name=username]').val().trim() == '') {
+                showAlterbox('请输入用户名！')
+            } else if ($('input[name=account]').val().match(/[<'">]/g)) {
+                showAlterbox('请输入合法字符！')
+            } else if (reg.test($('input[name=account]').val())) {
+                showAlterbox("不能含有中文")
+            } else if ($('#avatorVal').val() == '') {
+                showAlterbox('请上传头像！')
+            } else if ($('input[name=username]').val().length > 5) {
+                showAlterbox("昵称太长了！！")
+            } else {
+                $.ajax({
+                    url: "/posts/user/setoneuser",
+                    data: {
+                        username: $('input[name=username]').val(),
+                        password: $('input[name=password]').val(),
+                        repeatpass: $('input[name=repeatpass]').val(),
+                        avator: $('#avatorVal').val(),
+                        account: $('input[name=account]').val(),
+                        userid: `<%= session.id %>`
+                    },
+                    type: "POST",
+                    cache: false,
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (msg.code == 200) {
+                            showAlterbox('修改成功，请重新登录')
+                            setTimeout(function () {
+                                window.location.href = "/signin"
+                            }, 1000)
+
+                        } else {
+                            alert(msg.message)
+                        }
+                    },
+                    error: function () {
+                        alert('异常');
+                    }
+                })
+            }
+        })
+    </script>
+</body>
+
+</html>

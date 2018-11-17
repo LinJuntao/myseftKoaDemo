@@ -1,0 +1,150 @@
+<%- include("header") %>
+<div id="todomonthbox">
+    <div class="speartbox">
+        <el-breadcrumb separator="/">
+            <el-breadcrumb-item>
+                <a href="/posts">
+                    POSTS
+                </a>
+            </el-breadcrumb-item>
+            <el-breadcrumb-item>
+                <a href="/posts/todo">
+                    TODO
+                </a>
+            </el-breadcrumb-item>
+            <el-breadcrumb-item> MONTH</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="monthbox">
+        <el-collapse v-model="activeName" @change="collapseBox()" accordion>
+            <el-collapse-item name="thismonth">
+                <template slot="title">
+                    <i class="el-icon-arrow-right" id="thisMonth">Xxx </i>
+                </template>
+                <ul>
+                    <li class="todomonthclss" v-for="(teamsthis,index) in todoThislists" :key="index">
+                        <p :class=" teamsthis.todoeventstatue==10 ? 'monthTrue' : 'monthFalse' ">TODO :
+                            {{teamsthis.todoeventcontent}}
+                            <br>
+                            <span>DATE : {{teamsthis.todoeventdate}}</span>
+                        </p>
+
+                    </li>
+                </ul>
+            </el-collapse-item>
+            <el-collapse-item name="lastmonth">
+                <template slot="title">
+                    <i class="el-icon-arrow-right" id="lastMonth">xxx</i>
+                </template>
+                <ul>
+                    <li class="todomonthclss" v-for="(teamslast,index) in todoLastlists" :key="index">
+                        <p :class=" teamslast.todoeventstatue==10 ? 'monthTrue' : 'monthFalse' ">TODO:
+                            {{teamslast.todoeventcontent}}
+                            <br>
+                            <span>DATE: {{teamslast.todoeventdate}}</span></p>
+                    </li>
+                </ul>
+            </el-collapse-item>
+            <el-collapse-item name="moremonth">
+                <template slot="title">
+                    <i class="el-icon-arrow-right"> 更早的数据 </i>
+                </template>
+                <ul>
+                    <li class="todomonthclss" v-for="(teamsmore,index) in todoMorelists" :key="index">
+                        <p :class=" teamsmore.todoeventstatue==10 ? 'monthTrue' : 'monthFalse' ">TODO:
+                            {{teamsmore.todoeventcontent}}
+                            <br>
+                            <span>DATE: {{teamsmore.todoeventdate}}</span></p>
+                    </li>
+                </ul>
+            </el-collapse-item>
+        </el-collapse>
+    </div>
+</div>
+<script>
+    var todomonthbox = new Vue({
+        el: '#todomonthbox',
+        data() {
+            return {
+                activeName: "thismonth",
+                todoThislists: [],
+                todoLastlists: [],
+                todoMorelists: []
+            }
+        },
+        methods: {
+            collapseBox() {
+                let _vm = this;
+                if (this.activeName == 'thismonth') {
+                    $.ajax({
+                        url: '/posts/todo/thismonth',
+                        type: "GET",
+                        success: function (mes) {
+                            if (mes.code == 200) {
+                                _vm.todoThislists = mes.res;
+                            }
+                        },
+                        error: function () {
+                            alert("出错")
+                        }
+                    })
+                }
+                if (this.activeName == 'lastmonth') {
+                    $.ajax({
+                        url: '/posts/todo/lastmonth',
+                        type: "GET",
+                        success: function (mes) {
+                            if (mes.code == 200) {
+                                _vm.todoLastlists = mes.res;
+                            }
+                        },
+                        error: function () {
+                            alert("出错")
+                        }
+                    })
+
+                }
+                if (this.activeName == 'moremonth') {
+                    $.ajax({
+                        url: '/posts/todo/moremonth',
+                        type: "GET",
+                        success: function (mes) {
+                            if (mes.code == 200) {
+                                _vm.todoMorelists = mes.res;
+                            }
+                        },
+                        error: function () {
+                            alert("出错")
+                        }
+                    })
+                }
+            }
+        },
+        created: function () {
+            let _vm = this;
+            $.ajax({
+                url: '/posts/todo/thismonth',
+                type: "GET",
+                success: function (mes) {
+                    if (mes.code == 200) {
+                        _vm.todoThislists = mes.res;
+                    }
+                },
+                error: function () {
+                    alert("出错")
+                }
+            })
+
+        }
+    })
+    let dateStr = new Date();
+    document.getElementById("thisMonth").innerText = ` ${(dateStr.getMonth()+1)} 月的数据`
+    if (dateStr.getMonth() == 0) {
+        document.getElementById("lastMonth").innerText = ` 12月的数据`
+    } else {
+        document.getElementById("lastMonth").innerText = ` ${(dateStr.getMonth())} 月的数据`
+    }
+    // document.getElementById("todomonthbox").innerText = dateStr + "/" + dateStr.getFullYear() + "/" + (dateStr.getMonth() +
+    //     1)
+</script>
+<% include footer %>

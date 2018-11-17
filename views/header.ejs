@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TODO</title>
+    <link rel="icon" href="/log.jpg">
+    <script src="/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="/ideabox.css">
+    <!-- t图标 -->
+    <link rel="stylesheet" href="/icon/iconfont.css">
+    <!-- element` -->
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="/vue.min.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <script src="/echarts.common.min.js"></script>
+
+    <script>
+        function showAlterbox(val) {
+            $('.alterbox').text(val)
+            $('.alterbox').css("top", "0")
+            setTimeout(function () {
+                $('.alterbox').css("top", "-50px")
+            }, 2000)
+        }
+
+        function showset() {
+            window.location.href = "/posts/user/setoneuser"
+        }
+    </script>
+</head>
+
+<body>
+    <div class="alterbox">这是用来提示的box</div>
+    <header>
+        <a href="/posts" class="h1Title">
+            IDEABOX
+        </a>
+        <ul class="headerRight">
+            <li>
+                <a>
+                    <i class="iconfont icon-rentijiance">Hi! &nbsp;
+                        <%= session.username %></i></a>
+                <ul class="listtwobox">
+                    <li>
+                        <a onclick="showset()">
+                            <i class="iconfont icon-bianji"> 修改</i>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="/signout">
+                            <i class="iconfont icon-icon_rukou"> 注销</i>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a>
+                    <img src="/images/<%=rel[0].avator %>" alt=" touxiang">
+                </a>
+            </li>
+        </ul>
+        <div class="headerRight">
+
+
+
+        </div>
+    </header>

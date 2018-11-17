@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TODO</title>
+    <link rel="icon" href="/log.jpg">
+    <script src="/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="/ideabox.css">
+    <!-- element` -->
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="/vue.min.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script>
+        function showAlterbox(val){
+        $('.alterbox').text(val)
+            $('.alterbox').css("top","0")
+            setTimeout(function(){
+                $('.alterbox').css("top","-50px")
+            },2000)
+        }
+    
+    </script>
+</head>
+
+<body>
+    <div class="alterbox">这是用来提示的box</div>
+    <div id="app" class="signin">
+        <el-row>
+            <el-col style="width:100%">
+                <el-card shadow="hover">
+                    <div class="sigtitle"> 登录 |&nbsp; SINGUP</div>
+                    <hr>
+                    <form class="form sigInput" method="post">
+                        <div>
+                            <label>账户:</label>
+                            <input type="text" placeholder="用户名" name="account" v-model="account">
+                        </div>
+                        <div>
+                            <label>密码:</label>
+                            <input type="password" placeholder="密码" name="password" @keyup.enter="submitBtn" v-model="password">
+                        </div>
+                    </form>
+                    <div class="btnlist">
+                        <div class="submit formbtn" @click="submitBtn">登录</div>
+                        <a class="formbtn" href="/signup">注册</a>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+    </div>
+
+
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    account: "",
+                    password: ""
+                }
+            },
+            methods: {
+                submitBtn: function () {
+                    if (this.account.trim() == '' || this.password.trim() == '') {
+                        showAlterbox('请输入用户名或密码')
+                    } else {
+                        $.ajax({
+                            url: "/signin",
+                            data: $('.form').serialize(),
+                            type: "POST",
+                            cache: false,
+                            dataType: 'json',
+                            success: function (msg) {
+                                if (msg.code != 200) {
+                                    $('input').val('')
+                                    showAlterbox('用户名或密码错误')
+                                } else {
+                                    showAlterbox("登录成功")
+                                    setTimeout(function () {
+                                        window.location.href = "/posts"
+                                    }, 1500)
+                                }
+                            },
+                            error: function () {
+                                alert('异常');
+                            }
+                        })
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

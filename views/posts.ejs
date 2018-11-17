@@ -1,0 +1,72 @@
+<%- include("header") %>
+
+<div id="app" class="containerbox">
+    <div class="listbox">
+        <el-row :gutter="24">
+            <el-col :xs="12" :sm="8" :md="6" :lg="4">
+                <a href="/posts/todo" class="elcolbox">
+                    <div class="lboxtitle">
+                        <i class="el-icon-edit"></i>
+                        <div>TODO</div>
+                    </div>
+                    <div class="lboxcon">
+                        <span>记录你所需要做的事情</span>
+                        <span>--在这里可以记录你每天所需要做的事情@.@</span>
+                    </div>
+                </a>
+            </el-col>
+            <el-col :xs="12" :sm="8" :md="6" :lg="4">
+                <a href="/posts/cons" class="elcolbox">
+                    <div class="lboxtitle">
+                        <i class="el-icon-time"></i>
+                        <div>COMSUMPTIONS</div>
+                    </div>
+                    <div class="lboxcon">
+                        <span>记录你的账单</span>
+                        <span>--在这里可以记录你每天花费的地方，金钱多少，方便你更好的理财，里面设有月账单的功能@.@</span>
+                    </div>
+                </a>
+            </el-col>
+            <% if(rel[0].todomanage == 1) { %>
+            <el-col :xs="12" :sm="8" :md="6" :lg="4">
+                <a href="/posts/user" class="elcolbox">
+                    <div class="lboxtitle">
+                        <i class="el-icon-menu"></i>
+                        <div>Manager</div>
+                    </div>
+                    <div class="lboxcon">
+                        <span>这个只有管理员才能看到的哦</span>
+                        <span>--更好的发挥你管理员的能力吧，里面都是管理员才有的特权@.@</span>
+                    </div>
+                </a>
+            </el-col>
+            <% } %>
+            <el-col :xs="12" :sm="8" :md="6" :lg="4">
+                <a class="elcolbox">
+                    <div class="lboxtitle">
+                        <i class="el-icon-more"></i>
+                        <div>MORE</div>
+                    </div>
+                    <div class="lboxcon">
+                        <span>更多功能哦</span>
+                        <span>--以后会陆续添加更好的实用功能@.@</span>
+                    </div>
+                </a>
+            </el-col>
+        </el-row>
+    </div>
+
+</div>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                data: "aaa"
+            }
+        }
+    })
+</script>
+
+<% include footer %>

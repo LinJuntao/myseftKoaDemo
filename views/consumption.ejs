@@ -1,0 +1,261 @@
+<%- include("header") %>
+<div id="conapp">
+    <div class="conbox">
+        <div class="speartbox">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>
+                    <a href="/posts">
+                        POSTS
+                    </a>
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>CONSUMPTION</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <el-row>
+            <el-col :xs="0" :sm="4" :md="4">
+                <div style="width:10px;height: 10px;"></div>
+            </el-col>
+            <el-col :xs="24" :sm="16" :md="16">
+                <el-card shadow="hover">
+                    <div class="conscardtitle">
+                        <div>
+                            <span class="siftbox">
+                                <img src="/icon/changekind.png" alt="skind"> 筛选</i>
+                                <ul class="siftdisbox">
+                                    <li v-for="teams in conskindlis">
+                                        <img :src="teams.iconf" alt="icon">
+                                        <div @click="changekind(teams.kindid)" v-text="teams.kindname"></div>
+                                    </li>
+                                    <li>
+                                        <img src="/icon/changekind.png" alt="全部">
+                                        <div @click="changeAll()">全部</div>
+                                    </li>
+                                    <div>
+                                        <span>范围：</span>
+                                        <span>
+                                            <el-input placeholder="请输入范围" size="mini" v-model="moneyNub1" clearable></el-input>
+                                        </span> ~~
+                                        <span>
+                                            <el-input placeholder="请输入范围" size="mini" v-model="moneyNub2" clearable></el-input>
+                                        </span>
+                                        <el-button size="mini" @click="conschangeNub()" type="success" icon="el-icon-search"
+                                            circle></el-button>
+
+                                    </div>
+                                </ul>
+                            </span>
+                        </div>
+                        <div>
+                            <el-input size="mini" @keyup.enter.native="findcons(findStr)" placeholder="请输入内容" v-model="findStr"
+                                class="input-with-select">
+                                <el-button slot="append" @click="findcons(findStr)" icon="el-icon-search"></el-button>
+                            </el-input>
+                        </div>
+
+                    </div>
+                    <div class="consnexttitle">
+                        <span v-text="theremonth"></span>
+                        <el-button type="warning" @click="show = !show;" onclick="echartsBox()" size="mini" icon="el-icon-news" circle></el-button><br>
+                        <span :style="tatloMoney.substring(0, 1) =='-' ? 'color: #be1111':'color: #1d7a1d'  ">使用情况：￥
+                            {{tatloMoney}}</span>
+                        <span>支出：￥ {{spendMoney}}</span>
+                        <span>收入：￥ {{incomeMoney}}</span>
+                        <div>
+                            <el-button type="primary" size="mini" @click="dialogFormVisible = true" icon="el-icon-edit"
+                                circle></el-button>
+                            <el-date-picker size="mini" @change="atchangemonth" value-format="yyyy-MM" style="width:110px;"
+                                v-model="monthStr" type="month" placeholder="选择月">
+                            </el-date-picker>
+                        </div>
+
+
+                    </div>
+                    <div class="conscardcontain">
+                        <ul>
+                            <li v-for="teamlist of conslist">
+                                <el-tooltip class="item" effect="dark" :content="teamlist.coneventcontent" placement="top">
+                                    <div class="consboxlists">
+                                        <img :src="teamlist.coneventavatar" alt="消费分类">
+                                        <p>
+                                            <span v-text="'消费内容：'+teamlist.coneventcontent"></span>
+                                            <span v-text="'时间:'+teamlist.coneventdate"></span>
+                                        </p>
+                                        <span v-text="teamlist.conevent == 20 ? ('-'+teamlist.coneventmoney) :('+'+teamlist.coneventmoney)">
+                                        </span>
+                                    </div>
+                                </el-tooltip>
+                            </li>
+                        </ul>
+                        <div v-if="ifpage" style="float:right;padding-bottom: 10px">
+                            <el-pagination background @current-change="handleCurrentChange" :page-size="10" layout="total, prev, pager, next"
+                                :total="pageTotal">
+                            </el-pagination>
+                        </div>
+
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+
+        <el-dialog title="添加账单" :visible.sync="dialogFormVisible">
+            <el-form label-position="top" :model="formCons">
+                <el-form-item style="margin-bottom:0" label="消费详情:">
+                    <el-input size="mini" v-model="formCons.coneventcontent"></el-input>
+                </el-form-item>
+                <el-form-item style="margin-bottom:0" label="消费金额(￥):">
+                    <el-input size="mini" v-model="formCons.coneventmoney" onkeyup="if(isNaN(value))execCommand('undo')"
+                        onafterpaste="if(isNaN(value))execCommand('undo')"></el-input>
+                </el-form-item>
+                <el-form-item style="margin-bottom:0" label="收入 OR 支出:">
+                    <el-radio-group v-model="formCons.conevent" size="mini">
+                        <el-radio border label="20">支出</el-radio>
+                        <el-radio border label="21">收入</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item style="margin-bottom:0" label="消费分类:">
+                    <el-select v-model="formCons.conkind" clearable placeholder="请选择">
+                        <el-option size="mini" v-for="item in conskindlis" :key="item.kindid" :label="item.kindname"
+                            :value="item.kindid">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+                <el-button size="mini" type="success" @click="dialogBtn()">确 定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+    <transition name="el-fade-in-linear">
+        <div v-show="show" class="tranBox">
+            <div class="tranBoxNext">
+                <h4 style="margin:0 0; text-align: center"><el-button style="margin-left: 20px" @click="show = !show" size="mini" type="success" icon="el-icon-circle-close" circle plain></el-button>
+                    &nbsp;消费分布:</h4>
+                <div class="mianboxs" id="mainspend" style="width: 400px;height:300px;"></div>
+                <div class="mianboxs" id="mainincome" style="width:  400px;height:300px;"></div>
+               
+
+            </div>
+        </div>
+    </transition>
+
+</div>
+
+<script src="/consump.js"></script>
+<script>
+    if (document.body.clientWidth < 830) {
+        $('.tranBoxNext').css('width', '100%');
+        $('.tranBoxNext').css('top', '0');
+        $('.tranBoxNext').css('left', '0');
+        $('.tranBoxNext').css('transform', 'translate(0, 0)');
+        ($('.mianboxs')[0]).style.margin = "0 auto";
+        ($('.mianboxs')[0]).style.top = "0";
+        ($('.mianboxs')[0]).style.display = "block";
+        ($('.mianboxs')[1]).style.margin = "0 auto";
+        ($('.mianboxs')[1]).style.display = "block";
+        $('.tranBox').css('background-color', 'white');
+
+    }
+    function echartsBox() {
+        var mainspend = echarts.init(document.getElementById("mainspend"));
+        var mainincome = echarts.init(document.getElementById("mainincome"));
+        mainspend.setOption({
+            title: {
+                text: `${localStorage.getItem("monthStr")}的消费分布`,
+                x: "center"
+            },
+            tooltip: {
+                trigger: "item",
+                formatter: "{a} <br />{b} : ￥{c} ({d}%)"
+            },
+            legend: {
+                orient: "vertical",
+                left: "left",
+                data: []
+            },
+            series: [{
+                name: "数据来源",
+                type: "pie",
+                radius: "55%",
+                data: [],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: "rgba(0,0,0,0.5)"
+                    }
+                }
+            }]
+        });
+        mainspend.showLoading();
+        $.ajax({
+            url: "/posts/cons/finddusepieS",
+            data: {
+                coneventdate: localStorage.getItem("monthStr")
+            },
+            type: "POST",
+            success: function (data) {
+                mainspend.setOption({
+                    legend: {
+                        data: data.res.name
+                    },
+                    series: [{
+                        data: data.res
+                    }]
+                });
+                mainspend.hideLoading();
+            }
+        });
+
+        //第二个
+        mainincome.setOption({
+            title: {
+                text: `${localStorage.getItem("monthStr")}的收入分布`,
+                x: "center"
+            },
+            tooltip: {
+                trigger: "item",
+                formatter: "{a} <br />{b} : ￥{c} ({d}%)"
+            },
+            legend: {
+                orient: "vertical",
+                left: "left",
+                data: []
+            },
+            series: [{
+                name: "数据来源",
+                type: "pie",
+                radius: "55%",
+                data: [],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: "rgba(0,0,0,0.5)"
+                    }
+                }
+            }]
+        });
+        mainincome.showLoading();
+        $.ajax({
+            url: "/posts/cons/finddusepieI",
+            data: {
+                coneventdate: localStorage.getItem("monthStr")
+            },
+            type: "POST",
+            success: function (data) {
+                mainincome.setOption({
+                    legend: {
+                        data: data.res.name
+                    },
+                    series: [{
+                        data: data.res
+                    }]
+                });
+                mainincome.hideLoading();
+            }
+        });
+    }
+
+</script>
+<% include footer %>

@@ -1,0 +1,150 @@
+<%- include("header") %>
+<div id="todoapp">
+    <div class="todobox">
+        <div class="speartbox">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>
+                    <a href="/posts">
+                        POSTS
+                    </a>
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>TODO</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+
+        <el-row :gutter="24">
+            <el-col :xs="0" :sm="3" :md="4">
+                <div style="width:40px;height:40px"></div>
+            </el-col>
+            <el-col :xs="24" :sm="18" :md="16">
+                <div class="todosomething">
+                    <el-row>
+                        <el-col :span="24">
+                            <div class="containHeader">
+                                <el-row style="border: 1px solid gainsboro;">
+                                    <el-col :span="2"><span class="allbox"></span></el-col>
+                                    <el-col :span="20">
+                                        <input class="inputHeaderBox" type="text" placeholder="What needs to be find?"
+                                            @keyup.enter="todofindbtn" v-model="todofind"></el-col>
+                                    <el-col :span="2">
+                                        <div class="el-icon-search btnHeaderbox" v-on:click="todofindbtn"></div>
+                                    </el-col>
+                                </el-row>
+                                <el-row style="border: 1px solid gainsboro; border-top:none ">
+                                    <el-col :span="2"><span v-on:click="moreAll" class="el-icon-more allbox"></span>
+                                    </el-col>
+                                    <el-col :span="20">
+                                        <input class="inputHeaderBox" type="text" placeholder="What needs to be done?"
+                                            @keyup.enter="todobtn" v-model="todoStr">
+                                    </el-col>
+                                    <el-col :span="2">
+                                        <div class="el-icon-edit btnHeaderbox" v-on:click="todobtn"></div>
+                                    </el-col>
+                                </el-row>
+                            </div>
+                        </el-col>
+                        <el-col :span="24" style="box-shadow: 1px 1px 3px #888888;">
+                            <el-row class="listContainBOX" v-for="(teams,index) in todolists" :key="index">
+                                <el-col :span="2">
+                                    <span class="checkboxChange">
+                                        <input v-if="ifcheckbo" :data-ifid="teams.todoeventid" type="checkbox"
+                                            v-on:click="checksbtn(teams.todoeventid,teams.todoeventstatue,index)">
+                                    </span>
+                                </el-col>
+                                <el-col :span="16">
+                                    <div class="containboxPP">
+                                        <p class="pbiaoqian" :data-showid="teams.todoeventid" ondblclick="ShowElement(this)">
+                                            {{teams.todoeventcontent}} </p>
+                                    </div>
+                                </el-col>
+                                <el-col :span="6">
+                                    <div class="containboxRigth"><i>时间:<br> {{teams.todoeventdate }}</i>
+                                        <button v-if="teams.todoeventstatue ==10" @click="deltodo(teams.todoeventid)">X</button>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                           <el-row :span="24">
+                                <el-col :xs="12" :sm="8" :md="6" :lg="4" >
+                                    <div class="chBOX" id="chbox1" v-on:click="todofindalldata">All</div>
+                                </el-col>
+                                <el-col :xs="12" :sm="8" :md="6" :lg="4" >
+                                        <div class="chBOX" id="chbox2" v-on:click="todofindactdata">Active</div>
+                                    </el-col>
+                                <el-col :xs="12" :sm="8" :md="6" :lg="4" >
+                                        <div class="chBOX" id="chbox3" v-on:click="todofinddeldata">Completed</div>
+                                </el-col>
+                                <el-col :xs="12" :sm="8" :md="6" :lg="4" >
+                                        <div class="chBOX" v-on:click="todoMonth">Month</div>
+                                </el-col>
+                                <el-col :xs="12" :sm="8" :md="6" :lg="4" >
+                                        <div class="chBOX" style="width: 150px;" id="clearchbox" v-if="checkList != ''" v-on:click="todoclear">
+                                            Clear completed</div>
+                                </el-col>
+                           </el-row>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-col>
+        </el-row>
+
+
+    </div>
+
+
+</div>
+<script src="/todo.js"></script>
+<script>
+    function ShowElement(element) {
+        var oldhtml = element.innerHTML;
+        //创建新的input元素
+        var newobj = document.createElement('input');
+        //为新增元素添加类型
+        newobj.type = 'text';
+        //input 的属性值
+        newobj.style.fontSize = "20px"
+        newobj.style.backgroundColor = "beige"
+        newobj.style.height = "36px"
+        newobj.style.width = "100%";
+        newobj.style.border = "none";
+        //为新增元素添加value值
+        newobj.value = oldhtml;
+        //为新增元素添加光标离开事件
+        newobj.onblur = function () {
+            //当触发时判断新增元素值是否为空，为空则不修改，并返回原有值
+            element.innerHTML = this.value == oldhtml ? oldhtml : this.value;
+            //当触发时设置父节点的双击事件为ShowElement
+            let valuep = this.value == oldhtml ? oldhtml : this.value;
+            element.setAttribute("ondblclick", "ShowElement(this);");
+            $.ajax({
+                url: '/posts/todo/updatetodo',
+                data: {
+                    todoeventcontent: valuep.trim(),
+                    todoeventid: $(element).attr("data-showid")
+                },
+                type: "POST",
+                success: function (mes) {
+                    if (mes.code == 200) {
+                        console.log(mes)
+                    }
+                },
+                error: function () {
+                    alert("出错")
+                }
+            })
+        };
+
+        //设置该标签的子节点为空
+        element.innerHTML = '';
+        //添加该标签的子节点，input对象
+        element.appendChild(newobj);
+        //设置选择文本的内容或设置光标位置（两个参数：start,end；start为开始位置，end为结束位置；如果开始位置和结束位置相同则就是光标位置）
+        newobj.setSelectionRange(0, oldhtml.length);
+        //设置获得光标
+        newobj.focus();
+
+        //设置父节点的双击事件为空
+        newobj.parentNode.setAttribute("ondblclick", "");
+
+    }
+</script>
+<% include footer %>
